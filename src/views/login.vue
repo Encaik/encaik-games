@@ -31,12 +31,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive } from "vue";
+import { inject, ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
+import { Socket } from "socket.io-client";
 import useCurrentInstance from "@/util/useCurrentInstance";
 import md5 from 'js-md5';
 
+const socket = inject("socket") as Socket;
 const { globalProperties } = useCurrentInstance();
 const router = useRouter();
 
@@ -68,6 +70,13 @@ function onLoginClick(data?: any) {
     if (!res.code) {
       ElMessage.success(res.msg);
       localStorage.setItem('user', JSON.stringify(dataObj));
+      socket.emit(
+        "message",
+        { type: "login", data: { username: '系统', msg: `${dataObj.username}进入房间了` } },
+        (data: any) => {
+          console.log(data);
+        }
+      );
       router.push("/game");
     } else {
       ElMessage.error(res.msg);

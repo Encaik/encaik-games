@@ -40,6 +40,7 @@ function onSendClick() {
       console.log(data);
     }
   );
+  input.value = '';
 }
 
 socket.on("event", (res: any) => {
@@ -72,10 +73,16 @@ socket.on("event", (res: any) => {
     flex-direction: column;
     height: 100%;
     .msg-list {
-      flex: 1 1;
+      flex: 1 1 calc(100vh - 212px);
       margin-bottom: 10px;
       background: #585858;
       border-radius: 10px;
+      overflow-y: auto;
+      color: #fff;
+      div {
+        padding: 5px 10px;
+        word-wrap: break-word;
+      }
     }
     .send-btn {
       width: 100%;
