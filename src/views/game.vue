@@ -22,6 +22,7 @@
 <script setup lang="ts">
 import { inject, reactive, ref } from "vue";
 import { Socket } from "socket.io-client";
+import { ElMessage } from "element-plus";
 
 const socket = inject("socket") as Socket;
 const username = localStorage.getItem('username');
@@ -32,6 +33,10 @@ let inputList = reactive({
 });
 
 function onSendClick() {
+  if (input.value == '') {
+    ElMessage.warning('不允许发送空消息');
+    return;
+  }
   inputList.data.push(`${username}:${input.value}`);
   socket.emit(
     "message",
