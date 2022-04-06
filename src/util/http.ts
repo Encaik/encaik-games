@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const config = {
-  baseURL: "http://172.16.0.55:3000",
+  baseURL: "http://124.222.1.235:3000/",
   timeout: 10000
 };
 
