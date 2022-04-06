@@ -25,7 +25,11 @@ import { Socket } from "socket.io-client";
 import { ElMessage } from "element-plus";
 
 const socket = inject("socket") as Socket;
-const username = localStorage.getItem('username');
+const user = localStorage.getItem('user');
+let userObj: { username: string; password: string };
+if (user) {
+  userObj = JSON.parse(user);
+}
 
 let input = ref("");
 let inputList = reactive({
@@ -37,10 +41,10 @@ function onSendClick() {
     ElMessage.warning('不允许发送空消息');
     return;
   }
-  inputList.data.push(`${username}:${input.value}`);
+  inputList.data.push(`${userObj.username}:${input.value}`);
   socket.emit(
     "message",
-    { type: "chat", data: { username, msg: input.value } },
+    { type: "chat", data: { username: userObj.username, msg: input.value } },
     (data: any) => {
       console.log(data);
     }
