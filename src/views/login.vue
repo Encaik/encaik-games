@@ -35,7 +35,7 @@ import { inject, ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { Socket } from "socket.io-client";
-import useCurrentInstance from "@/util/useCurrentInstance";
+import useCurrentInstance from "../util/useCurrentInstance";
 import md5 from 'js-md5';
 
 const socket = inject("socket") as Socket;
