@@ -1,6 +1,6 @@
 <template>
   <el-container class="container">
-    <el-main class="main"> </el-main>
+    <el-main class="main"></el-main>
     <el-aside class="aside">
       <div class="chat">
         <div class="msg-list">
@@ -11,9 +11,7 @@
             <el-input class="chat-input" v-model="input" />
           </el-col>
           <el-col :span="4">
-            <el-button type="primary" class="send-btn" @click="onSendClick()">
-              发送
-            </el-button>
+            <el-button type="primary" class="send-btn" @click="onSendClick()">发送</el-button>
           </el-col>
         </el-row>
       </div>
@@ -26,6 +24,7 @@ import { inject, reactive, ref } from "vue";
 import { Socket } from "socket.io-client";
 
 const socket = inject("socket") as Socket;
+const username = localStorage.getItem('username');
 
 let input = ref("");
 let inputList = reactive({
@@ -33,10 +32,10 @@ let inputList = reactive({
 });
 
 function onSendClick() {
-  inputList.data.push(input.value);
+  inputList.data.push(`${username}:${input.value}`);
   socket.emit(
     "message",
-    { type: "chat", data: { msg: input.value } },
+    { type: "chat", data: { username, msg: input.value } },
     (data: any) => {
       console.log(data);
     }
@@ -44,7 +43,7 @@ function onSendClick() {
 }
 
 socket.on("event", (res: any) => {
-  inputList.data.push(res.data.msg);
+  inputList.data.push(`${res.data.username}:${res.data.msg}`);
 });
 </script>
 

@@ -6,7 +6,7 @@
       </div>
     </el-header>
     <el-main class="main">
-      <slot></slot>
+      <router-view></router-view>
     </el-main>
   </el-container>
 </template>
