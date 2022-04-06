@@ -10,7 +10,7 @@ const app = createApp(App);
 app.use(router);
 
 app.use(socket, {
-  connection: "http://172.16.0.55:3000",
+  connection: "http://124.222.1.235:3000/",
   options: {
     autoConnect: false,
   },
