@@ -69,15 +69,9 @@ function onLoginClick(data?: any) {
   globalProperties.$http.post("/user/login", dataObj).then((res: any) => {
     if (!res.code) {
       ElMessage.success(res.msg);
-      localStorage.setItem('user', JSON.stringify(dataObj));
-      socket.emit(
-        "message",
-        { type: "login", data: { username: '系统', msg: `${dataObj.username}进入房间了` } },
-        (data: any) => {
-          console.log(data);
-        }
-      );
-      router.push("/game");
+      localStorage.setItem('user', JSON.stringify(res.data));
+      socket.emit("message", { type: "login", data: { username: dataObj.username } });
+      router.push("/games/gold-fish");
     } else {
       ElMessage.error(res.msg);
     }
@@ -96,8 +90,7 @@ function onSignupClick() {
   globalProperties.$http.post("/user", data).then((res: any) => {
     if (!res.code) {
       ElMessage.success(res.msg);
-      localStorage.setItem('username', logForm.username);
-      router.push("/game");
+      onLoginClick(data);
     } else {
       ElMessage.error(res.msg);
     }

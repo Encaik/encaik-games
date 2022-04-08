@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, onMounted } from "vue";
+import { inject, onMounted, onUnmounted } from "vue";
 import { Socket } from "socket.io-client";
 
 const socket = inject("socket") as Socket;
@@ -13,6 +13,10 @@ const socket = inject("socket") as Socket;
 onMounted(() => {
   socket.connect();
 });
+
+window.onbeforeunload = () => {
+  socket.disconnect();
+};
 </script>
 
 <style lang="less">

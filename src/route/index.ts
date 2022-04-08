@@ -1,23 +1,27 @@
 import { createRouter,createWebHashHistory} from "vue-router";
-const defaultLayout = () => import("@/layouts/default.vue");
-const login = () => import("@/views/login.vue");
-const game = () => import("@/views/game.vue");
 
 const routes = [
   { path: "/", redirect: "/login" },
   {
     path: "/",
-    component: defaultLayout,
+    component: () => import("@/layouts/default.vue"),
     children:[
       {
         path: "login",
         name: "login",
-        component: login
+        component: () => import("@/views/login.vue")
       },
       {
-        path: "game",
-        name: "game",
-        component: game
+        path: "games",
+        name: "games",
+        component: () => import("@/layouts/card.vue"),
+        children:[
+          {
+            path: "gold-fish",
+            name: "gold-fish",
+            component: () => import("@/views/games/gold-fish.vue")
+          }
+        ]
       }
     ]
   }
