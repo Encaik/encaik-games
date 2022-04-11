@@ -15,10 +15,7 @@
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
   "paths": {
-    // 根据别名配置相关路径
-    "@util/*": ["./src/util/*"],
-    "@views/*": ["./src/views/*"],
-    "@layouts/*": ["./src/layouts/*"]
+    "@/*": ["src/*"]
   },
   "references": [{ "path": "./tsconfig.node.json" }]
 }

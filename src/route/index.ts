@@ -1,33 +1,47 @@
-import { createRouter,createWebHashHistory} from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 
 const routes = [
   { path: "/", redirect: "/login" },
   {
     path: "/",
     component: () => import("@/layouts/default.vue"),
-    children:[
+    children: [
       {
         path: "login",
         name: "login",
-        component: () => import("@/views/login.vue")
+        component: () => import("@/views/login.vue"),
       },
       {
         path: "games",
         name: "games",
         component: () => import("@/layouts/card.vue"),
-        children:[
+        children: [
           {
             path: "gold-fish",
             name: "gold-fish",
-            component: () => import("@/views/games/gold-fish.vue")
-          }
-        ]
-      }
-    ]
-  }
-]
+            component: () => import("@/views/games/gold-fish.vue"),
+          },
+        ],
+      },
+    ],
+  },
+];
 
-export const router = createRouter({
+let router = createRouter({
   history: createWebHashHistory(),
-  routes: routes
-})
+  routes: routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (!sessionStorage.getItem("user")) {
+    if (to.name == "login") {
+      next();
+    } else {
+      router.push("login");
+    }
+  } else {
+    next();
+  }
+});
+
+export default router;

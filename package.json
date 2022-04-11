@@ -14,6 +14,8 @@
     "element-plus": "^2.1.7",
     "eslint-plugin-vue": "^8.5.0",
     "js-md5": "^0.7.3",
+    "pinia": "^2.0.13",
+    "pinia-plugin-persist": "^1.0.0",
     "socket.io-client": "^4.4.1",
     "vue": "^3.2.25",
     "vue-router": "^4.0.14"

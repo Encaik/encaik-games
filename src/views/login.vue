@@ -37,13 +37,15 @@ import { ElMessage } from "element-plus";
 import { Socket } from "socket.io-client";
 import useCurrentInstance from "../util/useCurrentInstance";
 import md5 from 'js-md5';
+import { useUserStore } from '@/store/user';
 
 const socket = inject("socket") as Socket;
 const { globalProperties } = useCurrentInstance();
 const router = useRouter();
+const userStore = useUserStore();
 
 let isLogin = ref(true);
-const user = localStorage.getItem('user');
+const user = userStore.user;
 
 const logForm = reactive({
   username: '',
@@ -56,9 +58,9 @@ const signForm = reactive({
   repassword: '',
 })
 
-if (user) {
-  const userObj = JSON.parse(user);
-  onLoginClick(userObj);
+console.log(user);
+if (user.id) {
+  onLoginClick(user);
 }
 
 function onLoginClick(data?: any) {
@@ -69,7 +71,7 @@ function onLoginClick(data?: any) {
   globalProperties.$http.post("/user/login", dataObj).then((res: any) => {
     if (!res.code) {
       ElMessage.success(res.msg);
-      localStorage.setItem('user', JSON.stringify(res.data));
+      userStore.updateUser(res.data);
       socket.emit("message", { type: "login", data: { username: dataObj.username } });
       router.push("/games/gold-fish");
     } else {

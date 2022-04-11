@@ -18,13 +18,11 @@
 import { inject, reactive, ref } from "vue";
 import { Socket } from "socket.io-client";
 import { ElMessage } from "element-plus";
+import { useUserStore } from '@/store/user';
 
 const socket = inject("socket") as Socket;
-const user = localStorage.getItem('user');
-let userObj: { username: string; password: string };
-if (user) {
-  userObj = JSON.parse(user);
-}
+const userStore = useUserStore();
+const user = userStore.user;
 
 let input = ref("");
 let inputList = reactive({
@@ -38,7 +36,7 @@ function onSendClick() {
   }
   socket.emit(
     "message",
-    { type: "chat", data: { username: userObj.username, msg: input.value } },
+    { type: "chat", data: { username: user.username, msg: input.value } },
     (data: any) => {
       console.log(data);
     }

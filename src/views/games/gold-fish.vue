@@ -23,13 +23,13 @@
 import { inject, onMounted, reactive } from "vue";
 import { Socket } from "socket.io-client";
 import { RoomData, RoomPositon } from "../../model";
+import { useUserStore } from '@/store/user';
 
 const socket = inject("socket") as Socket;
-const user = localStorage.getItem('user');
-let userObj: any = {};
-if (user) {
-  userObj = JSON.parse(user);
-}
+const userStore = useUserStore();
+const user = userStore.user;
+
+console.log(userStore.id);
 
 let roomData: RoomData = reactive({
   gameData: {
@@ -41,8 +41,8 @@ let roomData: RoomData = reactive({
     cardPile: [],
   },
   leftUser: {
-    id: userObj.id,
-    username: userObj.username,
+    id: user.id,
+    username: user.username,
     gameStatus: 0
   },
   rightUser: {
@@ -90,7 +90,7 @@ socket.on("event", (res: any) => {
       roomData.gameData = serveGameData;
     }
     if (serveGameUser) {
-      const selfPos = Object.keys(roomData.gameData.position).filter(pos => roomData.gameData.position[pos] === userObj.id)[0];
+      const selfPos = Object.keys(roomData.gameData.position).filter(pos => roomData.gameData.position[pos] === user.id)[0];
       roomData.leftUser = serveGameUser[roomData.gameData.position[selfPos]];
       roomData.rightUser = serveGameUser[roomData.gameData.position[renderPos[selfPos].right]];
     }
