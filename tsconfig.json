@@ -14,8 +14,10 @@
     "lib": ["esnext", "dom"]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "baseUrl": ".",
   "paths": {
-    "@/*": ["src/*"]
+    "@/*": ["src/*"],
+    "@/store/*": ["./src/store/*"]
   },
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -13,10 +13,6 @@ const socket = inject("socket") as Socket;
 onMounted(() => {
   socket.connect();
 });
-
-window.onbeforeunload = () => {
-  socket.disconnect();
-};
 </script>
 
 <style lang="less">
@@ -24,6 +20,7 @@ window.onbeforeunload = () => {
   margin: 0;
   padding: 0;
 }
+
 #app {
   width: 100%;
   min-height: 100vh;

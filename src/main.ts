@@ -12,8 +12,8 @@ app.use(router);
 app.use(store);
 
 app.use(socket, {
-  connection: "http://124.222.1.235:3000/",
-  //connection: "http://localhost:3000/",
+  //connection: "http://124.222.1.235:3000/",
+  connection: "http://localhost:3000/",
   options: {
     autoConnect: false,
   },

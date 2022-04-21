@@ -18,7 +18,7 @@
 import { inject, reactive, ref } from "vue";
 import { Socket } from "socket.io-client";
 import { ElMessage } from "element-plus";
-import { useUserStore } from '@/store/user';
+import { useUserStore } from '../store/user';
 
 const socket = inject("socket") as Socket;
 const userStore = useUserStore();
@@ -56,6 +56,7 @@ socket.on("event", (res: any) => {
   display: flex;
   flex-direction: column;
   height: 100%;
+
   .msg-list {
     flex: 1 1 calc(100vh - 212px);
     margin-bottom: 10px;
@@ -63,11 +64,13 @@ socket.on("event", (res: any) => {
     border-radius: 10px;
     overflow-y: auto;
     color: #fff;
+
     div {
       padding: 5px 10px;
       word-wrap: break-word;
     }
   }
+
   .send-btn {
     width: 100%;
     background-color: #00dcd6;

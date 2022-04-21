@@ -25,7 +25,7 @@
 import { inject, onMounted, reactive } from "vue";
 import { Socket } from "socket.io-client";
 import { RoomData, RoomPositon } from "../../model";
-import { useUserStore } from '@/store/user';
+import { useUserStore } from "../../store/user";
 
 const socket = inject("socket") as Socket;
 const userStore = useUserStore();
@@ -66,11 +66,6 @@ const renderPos: RoomPositon = {
 onMounted(() => {
   socket.emit("game", { type: "player:join", data: roomData.leftUser });
 });
-
-window.onbeforeunload = () => {
-  console.log(111);
-  socket.emit("game", { type: "player:exit", data: roomData.leftUser });
-};
 
 function onReadyClick(status: number) {
   if (typeof roomData.leftUser?.gameStatus === 'number') {

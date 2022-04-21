@@ -37,7 +37,7 @@ import { ElMessage } from "element-plus";
 import { Socket } from "socket.io-client";
 import useCurrentInstance from "../util/useCurrentInstance";
 import md5 from 'js-md5';
-import { useUserStore } from '@/store/user';
+import { useUserStore } from '../store/user';
 
 const socket = inject("socket") as Socket;
 const { globalProperties } = useCurrentInstance();
