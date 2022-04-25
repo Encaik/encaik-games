@@ -4,7 +4,7 @@
       <el-card>
         <span v-if="roomData.leftUser?.id === roomData.gameData.hostId">房主</span>
         <span>{{ roomData.leftUser?.username }}</span>
-        <span>{{ roomData.gameData.cardCount[roomData.leftUser?.id] }}</span>
+        <span>{{ roomData.gameData.cardCount[roomData.leftUser!.id] }}</span>
         <span v-if="roomData.leftUser?.gameStatus === 0">等待中</span>
         <span v-if="roomData.leftUser?.gameStatus === 1">已准备</span>
         <span v-if="roomData.leftUser?.gameStatus === 2">游戏中</span>
@@ -16,7 +16,7 @@
       <el-card>
         <span v-if="roomData.rightUser?.id === roomData.gameData.hostId">房主</span>
         <span>{{ roomData.rightUser?.username }}</span>
-        <span>{{ roomData.gameData.cardCount[roomData.rightUser?.id] }}</span>
+        <span>{{ roomData.gameData.cardCount[roomData.rightUser!.id] }}</span>
         <span v-if="roomData.rightUser?.gameStatus === 0">等待中</span>
         <span v-if="roomData.rightUser?.gameStatus === 1">已准备</span>
         <span v-if="roomData.rightUser?.gameStatus === 2">游戏中</span>
