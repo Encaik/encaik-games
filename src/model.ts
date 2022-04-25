@@ -38,7 +38,7 @@ export interface GameDataBody {
     used: number; // 已打出的牌的数量
     [key: string]: number; // 各成员拥有的牌数量
   };
-  cardPile: number[]; // 打出的牌列表
+  cardPile: Card[]; // 打出的牌列表
 }
 
 export interface GameUserBody {
@@ -62,4 +62,5 @@ export interface Card{
   number:number;
   typeStr:string;
   valueStr:string;
+  color:string;
 }

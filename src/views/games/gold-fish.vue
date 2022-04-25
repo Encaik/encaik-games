@@ -23,9 +23,10 @@
       </el-card>
     </div>
     <div class="used-pile">
-      <div class="used-pile-card" v-for="(item, index) in roomData.gameData.cardPile" :key="index">
-        <span>{{ cardMap[item].typeStr }}</span>
-        <span>{{ cardMap[item].valueStr }}</span>
+      <div class="used-pile-card" v-for="(item, index) in roomData.gameData.cardPile" :key="index"
+        :style="{ color: item.color }">
+        <span>{{ item.typeStr }}</span>
+        <span>{{ item.valueStr }}</span>
       </div>
     </div>
     <div class="start">
@@ -41,47 +42,13 @@
 <script setup lang="ts">
 import { inject, onMounted, reactive } from "vue";
 import { Socket } from "socket.io-client";
-import { Card, RoomData, RoomPositon } from "../../model";
+import { Card, GameStatus, RoomData, RoomPositon } from "../../model";
 import { useUserStore } from "../../store/user";
+import { ElMessageBox, Action, ElMessage } from "element-plus";
 
 const socket = inject("socket") as Socket;
 const userStore = useUserStore();
 const user = userStore.user;
-const cardMap: { [key: number]: Card } = {};
-
-for (let index = 0; index < 54; index++) {
-  const group: number = Math.floor(index / 13);
-  const number: number = index % 13;
-  const typeMap: { [key: number]: string } = {
-    0: '♠',
-    1: '♥',
-    2: '♦',
-    3: '♣',
-    4: ''
-  }
-  const valueMap: { [key: number]: string } = {
-    0: 'A',
-    1: '2',
-    2: '3',
-    3: '4',
-    4: '5',
-    5: '6',
-    6: '7',
-    7: '8',
-    8: '9',
-    9: '10',
-    10: 'J',
-    11: 'Q',
-    12: 'K',
-  }
-  const card: Card = {
-    group,
-    number,
-    typeStr: typeMap[group],
-    valueStr: group !== 4 ? valueMap[number] : 'Joker'
-  }
-  cardMap[index] = card;
-}
 
 let roomData: RoomData = reactive({
   gameData: {
@@ -150,6 +117,23 @@ socket.on("event", (res: any) => {
       const selfPos = Object.keys(roomData.gameData.position).filter(pos => roomData.gameData.position[pos] === user.id)[0];
       roomData.leftUser = serveGameUser[roomData.gameData.position[selfPos]];
       roomData.rightUser = serveGameUser[roomData.gameData.position[renderPos[selfPos].right]];
+    }
+    if (res.data.gameOver) {
+      if (res.data.gameOver === user.id) {
+        ElMessageBox.alert('恭喜你，赢得了游戏', '游戏结束', {
+          confirmButtonText: '确定',
+          callback: () => {
+            onReadyClick(GameStatus.wait);
+          },
+        })
+      } else {
+        ElMessageBox.alert('别灰心，再来一局吧', '游戏结束', {
+          confirmButtonText: '确定',
+          callback: () => {
+            onReadyClick(GameStatus.wait);
+          },
+        })
+      }
     }
   }
 });
