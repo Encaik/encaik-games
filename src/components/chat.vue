@@ -1,25 +1,27 @@
 <template>
   <div class="chat">
-    <div class="msg-list">
+    <div class="msg-list" ref="msgList">
       <div v-for="item in inputList.data" :key="item">{{ item }}</div>
     </div>
     <el-row :gutter="8">
       <el-col :span="20">
-        <el-input class="chat-input" v-model="input" />
+        <el-input class="chat-input" v-model="input" @keydown.enter="onSendClick" />
       </el-col>
       <el-col :span="4">
-        <el-button type="primary" class="send-btn" @click="onSendClick()">发送</el-button>
+        <el-button type="primary" class="send-btn" @click="onSendClick">发送</el-button>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script setup lang="ts">
-import { inject, reactive, ref } from "vue";
+import { inject, nextTick, reactive, ref } from "vue";
 import { Socket } from "socket.io-client";
 import { ElMessage } from "element-plus";
 import { useUserStore } from '../store/user';
+import { getCurrentInstance } from 'vue';
 
+const { proxy } = getCurrentInstance() as any;
 const socket = inject("socket") as Socket;
 const userStore = useUserStore();
 const user = userStore.user;
@@ -47,6 +49,9 @@ function onSendClick() {
 socket.on("event", (res: any) => {
   if (res.type === 'chat') {
     inputList.data.push(`${res.data.username}:${res.data.msg}`);
+    nextTick(() => {
+      proxy.$refs.msgList.scrollTop = proxy.$refs.msgList.scrollHeight;
+    })
   }
 });
 </script>
