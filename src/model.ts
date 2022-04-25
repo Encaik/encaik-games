@@ -30,13 +30,15 @@ export interface GameBody {
 }
 
 export interface GameDataBody {
+  hostId: string;//房主玩家id
+  playId: string;//当前出牌玩家id
   position: { [key: string]: string }; // 各成员位置
   cardCount: {
     total: number; // 总共牌的数量
     used: number; // 已打出的牌的数量
     [key: string]: number; // 各成员拥有的牌数量
   };
-  cardPile: string[]; // 打出的牌列表
+  cardPile: number[]; // 打出的牌列表
 }
 
 export interface GameUserBody {
@@ -53,4 +55,11 @@ export enum GameStatus {
   wait,
   ready,
   start,
+}
+
+export interface Card{
+  group:number;
+  number:number;
+  typeStr:string;
+  valueStr:string;
 }
