@@ -73,7 +73,7 @@ function onLoginClick(data?: any) {
       ElMessage.success(res.msg);
       userStore.updateUser(res.data);
       socket.emit("message", { type: "login", data: { username: dataObj.username } });
-      router.push("/games/gold-fish");
+      router.push("/home");
     } else {
       ElMessage.error(res.msg);
     }

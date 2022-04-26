@@ -20,11 +20,13 @@ import { Socket } from "socket.io-client";
 import { ElMessage } from "element-plus";
 import { useUserStore } from '../store/user';
 import { getCurrentInstance } from 'vue';
+import { useRoute } from "vue-router";
 
 const { proxy } = getCurrentInstance() as any;
 const socket = inject("socket") as Socket;
 const userStore = useUserStore();
 const user = userStore.user;
+const route = useRoute();
 
 let input = ref("");
 let inputList = reactive({
@@ -36,13 +38,24 @@ function onSendClick() {
     ElMessage.warning('不允许发送空消息');
     return;
   }
-  socket.emit(
-    "message",
-    { type: "chat", data: { username: user.username, msg: input.value } },
-    (data: any) => {
-      console.log(data);
-    }
-  );
+  if (route.params.id) {
+    socket.emit(
+      "room",
+      { type: "chat", data: { roomId: route.params.id, username: user.username, msg: input.value } },
+      (data: any) => {
+        console.log(data);
+      }
+    );
+  } else {
+    socket.emit(
+      "message",
+      { type: "chat", data: { username: user.username, msg: input.value } },
+      (data: any) => {
+        console.log(data);
+      }
+    );
+  }
+
   input.value = '';
 }
 

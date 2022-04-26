@@ -1,8 +1,7 @@
 import axios from "axios";
 
 const config = {
-  baseURL: "http://124.222.1.235:3000/",
-  //baseURL: "http://localhost:3000/",
+  baseURL: import.meta.env.PROD?"http://124.222.1.235:3000/":"http://localhost:3000/",
   timeout: 10000
 };
 

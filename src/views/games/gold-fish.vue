@@ -1,25 +1,25 @@
 <template>
   <div class="game-room">
     <div class="player-left">
-      <el-card>
-        <span v-if="roomData.leftUser?.id === roomData.gameData.hostId">房主</span>
-        <span>{{ roomData.leftUser?.username }}</span>
-        <span>{{ roomData.gameData.cardCount[roomData.leftUser!.id] }}</span>
-        <span v-if="roomData.leftUser?.gameStatus === 0">等待中</span>
-        <span v-if="roomData.leftUser?.gameStatus === 1">已准备</span>
-        <span v-if="roomData.leftUser?.gameStatus === 2">游戏中</span>
-        <el-button v-if="roomData.leftUser?.gameStatus === 1" @click="onReadyClick(0)">取消准备</el-button>
-        <el-button v-if="roomData.leftUser?.gameStatus === 0" type="primary" @click="onReadyClick(1)">准备</el-button>
+      <el-card v-if="roomData.leftUser.id !== ''">
+        <span v-if="roomData.leftUser.id === roomData.gameData.hostId">房主</span>
+        <span>{{ roomData.leftUser.username }}</span>
+        <span>{{ roomData.gameData.cardCount[roomData.leftUser!.id] || 0 }}</span>
+        <span v-if="roomData.leftUser.gameStatus === 0">等待中</span>
+        <span v-if="roomData.leftUser.gameStatus === 1">已准备</span>
+        <span v-if="roomData.leftUser.gameStatus === 2">游戏中</span>
+        <el-button v-if="roomData.leftUser.gameStatus === 1" @click="onReadyClick(0)">取消准备</el-button>
+        <el-button v-if="roomData.leftUser.gameStatus === 0" type="primary" @click="onReadyClick(1)">准备</el-button>
       </el-card>
     </div>
     <div class="player-right">
-      <el-card>
-        <span v-if="roomData.rightUser?.id === roomData.gameData.hostId">房主</span>
-        <span>{{ roomData.rightUser?.username }}</span>
+      <el-card v-if="roomData.rightUser.id !== ''">
+        <span v-if="roomData.rightUser.id === roomData.gameData.hostId">房主</span>
+        <span>{{ roomData.rightUser.username }}</span>
         <span>{{ roomData.gameData.cardCount[roomData.rightUser!.id] }}</span>
-        <span v-if="roomData.rightUser?.gameStatus === 0">等待中</span>
-        <span v-if="roomData.rightUser?.gameStatus === 1">已准备</span>
-        <span v-if="roomData.rightUser?.gameStatus === 2">游戏中</span>
+        <span v-if="roomData.rightUser.gameStatus === 0">等待中</span>
+        <span v-if="roomData.rightUser.gameStatus === 1">已准备</span>
+        <span v-if="roomData.rightUser.gameStatus === 2">游戏中</span>
       </el-card>
     </div>
     <div class="used-pile">
@@ -31,9 +31,9 @@
     </div>
     <div class="start">
       <el-button
-        v-if="roomData.leftUser?.gameStatus === 1 && roomData.rightUser?.gameStatus === 1 && user.id === roomData.gameData.hostId"
+        v-if="roomData.leftUser.gameStatus === 1 && roomData.rightUser.gameStatus === 1 && user.id === roomData.gameData.hostId"
         @click="onStartClick()">开始游戏</el-button>
-      <el-button v-if="roomData.leftUser?.gameStatus === 2 && user.id === roomData.gameData.playId"
+      <el-button v-if="roomData.leftUser.gameStatus === 2 && user.id === roomData.gameData.playId"
         @click="onPlayClick()">出牌</el-button>
     </div>
   </div>
@@ -42,9 +42,9 @@
 <script setup lang="ts">
 import { inject, onMounted, reactive } from "vue";
 import { Socket } from "socket.io-client";
-import { Card, GameStatus, RoomData, RoomPositon } from "../../model";
+import { GameStatus, RoomData, RoomPositon } from "../../model";
 import { useUserStore } from "../../store/user";
-import { ElMessageBox, Action, ElMessage } from "element-plus";
+import { ElMessageBox } from "element-plus";
 
 const socket = inject("socket") as Socket;
 const userStore = useUserStore();

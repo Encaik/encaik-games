@@ -12,12 +12,24 @@ const routes = [
         component: () => import("@/views/login.vue"),
       },
       {
+        path: "home",
+        name: "home",
+        component: () => import("@/layouts/card.vue"),
+        children: [
+          {
+            path: "",
+            name: "",
+            component: () => import("@/views/room/room.vue"),
+          },
+        ],
+      },
+      {
         path: "games",
         name: "games",
         component: () => import("@/layouts/card.vue"),
         children: [
           {
-            path: "gold-fish",
+            path: "gold-fish/:id",
             name: "gold-fish",
             component: () => import("@/views/games/gold-fish.vue"),
           },
