@@ -1,7 +1,7 @@
 export interface RoomData {
   gameData:GameDataBody;
-  leftUser?:GameUser;
-  rightUser?:GameUser;
+  leftUser:GameUser;
+  rightUser:GameUser;
 }
 
 export interface RoomPositon {

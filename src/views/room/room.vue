@@ -18,14 +18,14 @@
 </template>
 
 <script setup lang="ts">
-import { Socket } from 'dgram';
-import { inject, reactive } from 'vue';
+import { reactive } from 'vue';
 
 import router from '../../route';
+import { useChatStore } from '../../store/chat';
 import useCurrentInstance from '../../util/useCurrentInstance';
 
 const { globalProperties } = useCurrentInstance();
-const socket = inject("socket") as Socket;
+const chatStore = useChatStore();
 
 let data = reactive({ rooms: [] });
 
@@ -38,7 +38,7 @@ function getRooms() {
 }
 
 function onJoinClick(room: any) {
-  socket.emit("room", { type: "join", data: { roomId: room.id } });
+  chatStore.clearMsgs();
   router.push(`/games/gold-fish/${room.id}`);
 }
 </script>

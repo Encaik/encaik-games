@@ -1,7 +1,7 @@
 <template>
   <div class="chat">
     <div class="msg-list" ref="msgList">
-      <div v-for="item in inputList.data" :key="item">{{ item }}</div>
+      <div v-for="item in msgs.list" :key="item">{{ item }}</div>
     </div>
     <el-row :gutter="8">
       <el-col :span="20">
@@ -15,23 +15,23 @@
 </template>
 
 <script setup lang="ts">
-import { inject, nextTick, reactive, ref } from "vue";
+import { inject, nextTick, ref } from "vue";
 import { Socket } from "socket.io-client";
 import { ElMessage } from "element-plus";
 import { useUserStore } from '../store/user';
 import { getCurrentInstance } from 'vue';
 import { useRoute } from "vue-router";
+import { useChatStore } from "../store/chat";
 
 const { proxy } = getCurrentInstance() as any;
 const socket = inject("socket") as Socket;
 const userStore = useUserStore();
 const user = userStore.user;
+const chatStore = useChatStore();
+const msgs = chatStore.msgs;
 const route = useRoute();
 
 let input = ref("");
-let inputList = reactive({
-  data: [] as string[],
-});
 
 function onSendClick() {
   if (input.value == '') {
@@ -41,27 +41,20 @@ function onSendClick() {
   if (route.params.id) {
     socket.emit(
       "room",
-      { type: "chat", data: { roomId: route.params.id, username: user.username, msg: input.value } },
-      (data: any) => {
-        console.log(data);
-      }
+      { type: "chat", data: { roomId: route.params.id, username: user.username, msg: input.value } }
     );
   } else {
     socket.emit(
       "message",
-      { type: "chat", data: { username: user.username, msg: input.value } },
-      (data: any) => {
-        console.log(data);
-      }
+      { type: "chat", data: { username: user.username, msg: input.value } }
     );
   }
-
   input.value = '';
 }
 
 socket.on("event", (res: any) => {
   if (res.type === 'chat') {
-    inputList.data.push(`${res.data.username}:${res.data.msg}`);
+    chatStore.addMsg(`${res.data.username}:${res.data.msg}`)
     nextTick(() => {
       proxy.$refs.msgList.scrollTop = proxy.$refs.msgList.scrollHeight;
     })

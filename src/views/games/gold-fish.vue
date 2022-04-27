@@ -4,7 +4,7 @@
       <el-card v-if="roomData.leftUser.id !== ''">
         <span v-if="roomData.leftUser.id === roomData.gameData.hostId">房主</span>
         <span>{{ roomData.leftUser.username }}</span>
-        <span>{{ roomData.gameData.cardCount[roomData.leftUser!.id] || 0 }}</span>
+        <span>{{ roomData.gameData.cardCount[roomData.leftUser.id] || 0 }}</span>
         <span v-if="roomData.leftUser.gameStatus === 0">等待中</span>
         <span v-if="roomData.leftUser.gameStatus === 1">已准备</span>
         <span v-if="roomData.leftUser.gameStatus === 2">游戏中</span>
@@ -16,25 +16,31 @@
       <el-card v-if="roomData.rightUser.id !== ''">
         <span v-if="roomData.rightUser.id === roomData.gameData.hostId">房主</span>
         <span>{{ roomData.rightUser.username }}</span>
-        <span>{{ roomData.gameData.cardCount[roomData.rightUser!.id] }}</span>
+        <span>{{ roomData.gameData.cardCount[roomData.rightUser.id] }}</span>
         <span v-if="roomData.rightUser.gameStatus === 0">等待中</span>
         <span v-if="roomData.rightUser.gameStatus === 1">已准备</span>
         <span v-if="roomData.rightUser.gameStatus === 2">游戏中</span>
       </el-card>
     </div>
     <div class="used-pile">
-      <div class="used-pile-card" v-for="(item, index) in roomData.gameData.cardPile" :key="index"
-        :style="{ color: item.color }">
-        <span>{{ item.typeStr }}</span>
-        <span>{{ item.valueStr }}</span>
-      </div>
+      <transition-group name="list">
+        <div class="used-pile-card" v-for="(item, index) in roomData.gameData.cardPile" :key="index"
+          :style="{ color: item.color }">
+          <span>{{ item.typeStr }}</span>
+          <span>{{ item.valueStr }}</span>
+        </div>
+      </transition-group>
     </div>
     <div class="start">
-      <el-button
-        v-if="roomData.leftUser.gameStatus === 1 && roomData.rightUser.gameStatus === 1 && user.id === roomData.gameData.hostId"
-        @click="onStartClick()">开始游戏</el-button>
-      <el-button v-if="roomData.leftUser.gameStatus === 2 && user.id === roomData.gameData.playId"
-        @click="onPlayClick()">出牌</el-button>
+      <el-button v-if="
+      roomData.leftUser.gameStatus === 1 &&
+      roomData.rightUser.gameStatus === 1 &&
+      user.id === roomData.gameData.hostId" @click="onStartClick">
+        开始游戏
+      </el-button>
+      <el-button v-if="roomData.leftUser.gameStatus === 2 && user.id === roomData.gameData.playId" @click="onPlayClick">
+        出牌
+      </el-button>
     </div>
   </div>
 </template>
@@ -45,15 +51,19 @@ import { Socket } from "socket.io-client";
 import { GameStatus, RoomData, RoomPositon } from "../../model";
 import { useUserStore } from "../../store/user";
 import { ElMessageBox } from "element-plus";
+import { useRoute } from "vue-router";
 
 const socket = inject("socket") as Socket;
 const userStore = useUserStore();
 const user = userStore.user;
+const route = useRoute();
+
+socket.emit("room", { type: "join", data: { roomId: route.params.id, ...user } });
 
 let roomData: RoomData = reactive({
   gameData: {
-    hostId: '',
-    playId: '',
+    hostId: "",
+    playId: "",
     position: {},
     cardCount: {
       total: 0,
@@ -64,45 +74,45 @@ let roomData: RoomData = reactive({
   leftUser: {
     id: user.id,
     username: user.username,
-    gameStatus: 0
+    gameStatus: 0,
   },
   rightUser: {
     id: "",
     username: "",
-    gameStatus: 0
-  }
-})
+    gameStatus: 0,
+  },
+});
 
 const renderPos: RoomPositon = {
-  's': {
-    right: 'n'
+  s: {
+    right: "n",
   },
-  'n': {
-    right: 's'
-  }
-}
+  n: {
+    right: "s",
+  },
+};
 
 onMounted(() => {
-  socket.emit("game", { type: "player:join", data: roomData.leftUser });
+  socket.emit("game", { type: "player:join", data: { roomId: route.params.id, ...roomData.leftUser } });
 });
 
 function onReadyClick(status: number) {
-  if (typeof roomData.leftUser?.gameStatus === 'number') {
+  if (typeof roomData.leftUser?.gameStatus === "number") {
     roomData.leftUser.gameStatus = status;
     send();
   }
 }
 
 function onStartClick() {
-  socket.emit("game", { type: "game:start" });
+  socket.emit("game", { type: "game:start", data: { roomId: route.params.id } });
 }
 
 function onPlayClick() {
-  socket.emit("game", { type: "game:play", data: roomData.leftUser });
+  socket.emit("game", { type: "game:play", data: { roomId: route.params.id, ...roomData.leftUser } });
 }
 
 function send() {
-  socket.emit("game", { type: "player:update", data: roomData.leftUser });
+  socket.emit("game", { type: "player:update", data: { roomId: route.params.id, ...roomData.leftUser } });
 }
 
 socket.on("event", (res: any) => {
@@ -114,25 +124,28 @@ socket.on("event", (res: any) => {
       roomData.gameData = serveGameData;
     }
     if (serveGameUser) {
-      const selfPos = Object.keys(roomData.gameData.position).filter(pos => roomData.gameData.position[pos] === user.id)[0];
+      const selfPos = Object.keys(roomData.gameData.position).filter(
+        (pos) => roomData.gameData.position[pos] === user.id
+      )[0];
       roomData.leftUser = serveGameUser[roomData.gameData.position[selfPos]];
-      roomData.rightUser = serveGameUser[roomData.gameData.position[renderPos[selfPos].right]];
+      roomData.rightUser =
+        serveGameUser[roomData.gameData.position[renderPos[selfPos].right]];
     }
     if (res.data.gameOver) {
       if (res.data.gameOver === user.id) {
-        ElMessageBox.alert('恭喜你，赢得了游戏', '游戏结束', {
-          confirmButtonText: '确定',
+        ElMessageBox.alert("别灰心，再来一局吧", "游戏结束", {
+          confirmButtonText: "确定",
           callback: () => {
             onReadyClick(GameStatus.wait);
           },
-        })
+        });
       } else {
-        ElMessageBox.alert('别灰心，再来一局吧', '游戏结束', {
-          confirmButtonText: '确定',
+        ElMessageBox.alert("恭喜你，赢得了游戏", "游戏结束", {
+          confirmButtonText: "确定",
           callback: () => {
             onReadyClick(GameStatus.wait);
           },
-        })
+        });
       }
     }
   }
@@ -196,6 +209,24 @@ socket.on("event", (res: any) => {
       align-content: center;
       justify-content: space-evenly;
     }
+  }
+
+  .list-enter-active {
+    transition: all 0.2s ease;
+  }
+
+  .list-leave-active {
+    transition: all 1s ease;
+  }
+
+  .list-enter-from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+
+  .list-leave-to {
+    opacity: 0;
+    transform: translateY(30px);
   }
 }
 </style>
