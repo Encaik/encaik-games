@@ -1,9 +1,11 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@element-plus/icons-vue': ^1.1.4
   '@types/js-md5': ^0.4.3
   '@types/node': ^17.0.23
   '@vitejs/plugin-vue': ^2.3.0
+  '@vue/shared': ^3.2.33
   axios: ^0.26.1
   element-plus: ^2.1.7
   eslint-config-prettier: ^8.5.0
@@ -24,7 +26,9 @@ specifiers:
   vue-tsc: ^0.29.8
 
 dependencies:
+  '@element-plus/icons-vue': 1.1.4_vue@3.2.31
   '@types/js-md5': 0.4.3
+  '@vue/shared': 3.2.33
   axios: 0.26.1
   element-plus: 2.1.7_vue@3.2.31
   eslint-plugin-vue: 8.5.0
@@ -217,7 +221,7 @@ packages:
       '@volar/source-map': 0.29.8
       '@vue/compiler-core': 3.2.31
       '@vue/compiler-dom': 3.2.31
-      '@vue/shared': 3.2.31
+      '@vue/shared': 3.2.33
       upath: 2.0.1
     dev: true
 
@@ -314,6 +318,9 @@ packages:
 
   /@vue/shared/3.2.31:
     resolution: {integrity: sha512-ymN2pj6zEjiKJZbrf98UM2pfDd6F2H7ksKw7NDt/ZZ1fh5Ei39X5tABugtT03ZRlWd9imccoK0hE8hpjpU7irQ==}
+
+  /@vue/shared/3.2.33:
+    resolution: {integrity: sha512-UBc1Pg1T3yZ97vsA2ueER0F6GbJebLHYlEi4ou1H5YL4KWvMOOWwpYo9/QpWq93wxKG6Wo13IY74Hcn/f7c7Bg==}
 
   /@vueuse/core/8.2.3_vue@3.2.31:
     resolution: {integrity: sha512-bz6XroFRFOIGzhAHcnTfjtAQNkNcSELKPoSSUGROwYfOgTnaVyq7iKhgwdeRNom3y9q+a60RlhD35oJaGsXDHA==}
@@ -1775,7 +1782,7 @@ packages:
       '@volar/vue-code-gen': 0.29.8
       '@vscode/emmet-helper': 2.8.4
       '@vue/reactivity': 3.2.31
-      '@vue/shared': 3.2.31
+      '@vue/shared': 3.2.33
       request-light: 0.5.7
       upath: 2.0.1
       vscode-css-languageservice: 5.4.1

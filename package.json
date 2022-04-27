@@ -9,7 +9,9 @@
     "pm2": "pm2 start node_modules/vite/bin/vite.js"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^1.1.4",
     "@types/js-md5": "^0.4.3",
+    "@vue/shared": "^3.2.33",
     "axios": "^0.26.1",
     "element-plus": "^2.1.7",
     "eslint-plugin-vue": "^8.5.0",

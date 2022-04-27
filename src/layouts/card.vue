@@ -20,6 +20,7 @@ import chat from '@/components/chat.vue';
   padding: 24px;
   height: 100%;
 }
+
 .main {
   background: #4c4c4c;
   border-radius: 10px;
@@ -27,6 +28,7 @@ import chat from '@/components/chat.vue';
   margin-right: 16px;
   box-shadow: 0 0 3px 1px #00dcd6;
 }
+
 .aside {
   width: 450px;
   background: #4c4c4c;

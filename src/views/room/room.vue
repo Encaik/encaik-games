@@ -4,7 +4,7 @@
       <el-button>创建房间</el-button>
     </el-card>
     <el-table :data="data.rooms" style="width: 100%">
-      <el-table-column prop="id" label="ID" width="300" />
+      <el-table-column prop="id" label="ID" width="350" />
       <el-table-column prop="roomName" label="房间名" width="180" />
       <el-table-column prop="roomCurCount" label="当前人数" />
       <el-table-column prop="roomMaxCount" label="最大人数" />
