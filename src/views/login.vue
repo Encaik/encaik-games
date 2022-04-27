@@ -2,7 +2,7 @@
   <el-card class="login-wrap">
     <el-form label-width="80px" label-position="left" v-if="isLogin">
       <el-form-item label="用户名">
-        <el-input v-model="logForm.username" />
+        <el-input v-model="logForm.userName" />
       </el-form-item>
       <el-form-item label="密码">
         <el-input type="password" v-model="logForm.password" />
@@ -14,7 +14,11 @@
     </el-form>
     <el-form label-width="80px" label-position="left" v-if="!isLogin">
       <el-form-item label="用户名">
-        <el-input v-model="signForm.username" />
+        <el-input v-model="signForm.userName" />
+      </el-form-item>
+      <el-form-item label="性别">
+        <el-radio v-model="signForm.sex" :label="0">男</el-radio>
+        <el-radio v-model="signForm.sex" :label="1">女</el-radio>
       </el-form-item>
       <el-form-item label="密码">
         <el-input type="password" v-model="signForm.password" />
@@ -48,12 +52,13 @@ let isLogin = ref(true);
 const user = userStore.user;
 
 const logForm = reactive({
-  username: '',
+  userName: '',
   password: '',
 })
 
 const signForm = reactive({
-  username: '',
+  userName: '',
+  sex: 0,
   password: '',
   repassword: '',
 })
@@ -65,14 +70,14 @@ if (user.id) {
 
 function onLoginClick(data?: any) {
   const dataObj = data || {
-    username: logForm.username,
+    userName: logForm.userName,
     password: md5(logForm.password),
   };
   globalProperties.$http.post("/user/login", dataObj).then((res: any) => {
     if (!res.code) {
       ElMessage.success(res.msg);
       userStore.updateUser(res.data);
-      socket.emit("message", { type: "login", data: { username: dataObj.username } });
+      socket.emit("message", { type: "login", data: { userName: dataObj.userName } });
       router.push("/home");
     } else {
       ElMessage.error(res.msg);
@@ -86,7 +91,8 @@ function onSignupClick() {
     return;
   }
   const data = {
-    username: signForm.username,
+    userName: signForm.userName,
+    sex: signForm.sex,
     password: md5(signForm.password),
   };
   globalProperties.$http.post("/user", data).then((res: any) => {

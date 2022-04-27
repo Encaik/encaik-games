@@ -16,12 +16,12 @@ export interface SocketMessageBody<T = any> {
 }
 
 export interface ChatBody {
-  username: string;
+  userName: string;
   msg: string;
 }
 
 export interface LoginBody {
-  username: string;
+  userName: string;
 }
 
 export interface GameBody {
@@ -47,7 +47,7 @@ export interface GameUserBody {
 
 export interface GameUser {
   id: string;
-  username: string;
+  userName: string;
   gameStatus: GameStatus;
 }
 

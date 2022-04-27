@@ -3,7 +3,7 @@
     <div class="player-left">
       <el-card v-if="roomData.leftUser.id !== ''">
         <span v-if="roomData.leftUser.id === roomData.gameData.hostId">房主</span>
-        <span>{{ roomData.leftUser.username }}</span>
+        <span>{{ roomData.leftUser.userName }}</span>
         <span>{{ roomData.gameData.cardCount[roomData.leftUser.id] || 0 }}</span>
         <span v-if="roomData.leftUser.gameStatus === 0">等待中</span>
         <span v-if="roomData.leftUser.gameStatus === 1">已准备</span>
@@ -15,7 +15,7 @@
     <div class="player-right">
       <el-card v-if="roomData.rightUser.id !== ''">
         <span v-if="roomData.rightUser.id === roomData.gameData.hostId">房主</span>
-        <span>{{ roomData.rightUser.username }}</span>
+        <span>{{ roomData.rightUser.userName }}</span>
         <span>{{ roomData.gameData.cardCount[roomData.rightUser.id] }}</span>
         <span v-if="roomData.rightUser.gameStatus === 0">等待中</span>
         <span v-if="roomData.rightUser.gameStatus === 1">已准备</span>
@@ -73,12 +73,12 @@ let roomData: RoomData = reactive({
   },
   leftUser: {
     id: user.id,
-    username: user.username,
+    userName: user.userName,
     gameStatus: 0,
   },
   rightUser: {
     id: "",
-    username: "",
+    userName: "",
     gameStatus: 0,
   },
 });

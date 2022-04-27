@@ -41,12 +41,12 @@ function onSendClick() {
   if (route.params.id) {
     socket.emit(
       "room",
-      { type: "chat", data: { roomId: route.params.id, username: user.username, msg: input.value } }
+      { type: "chat", data: { roomId: route.params.id, userName: user.userName, msg: input.value } }
     );
   } else {
     socket.emit(
       "message",
-      { type: "chat", data: { username: user.username, msg: input.value } }
+      { type: "chat", data: { userName: user.userName, msg: input.value } }
     );
   }
   input.value = '';
@@ -54,7 +54,7 @@ function onSendClick() {
 
 socket.on("event", (res: any) => {
   if (res.type === 'chat') {
-    chatStore.addMsg(`${res.data.username}:${res.data.msg}`)
+    chatStore.addMsg(`${res.data.userName}:${res.data.msg}`)
     nextTick(() => {
       proxy.$refs.msgList.scrollTop = proxy.$refs.msgList.scrollHeight;
     })

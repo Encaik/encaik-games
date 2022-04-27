@@ -5,9 +5,10 @@
     </el-card>
     <el-table :data="data.rooms" style="width: 100%">
       <el-table-column prop="id" label="ID" width="300" />
-      <el-table-column prop="roomname" label="房间名" width="180" />
-      <el-table-column prop="roomcount" label="最大人数" />
-      <el-table-column prop="roomstatus" label="当前状态" />
+      <el-table-column prop="roomName" label="房间名" width="180" />
+      <el-table-column prop="roomCurCount" label="当前人数" />
+      <el-table-column prop="roomMaxCount" label="最大人数" />
+      <el-table-column prop="roomStatus" label="当前状态" />
       <el-table-column fixed="right" label="操作" width="200">
         <template #default="scope">
           <el-button type="text" @click="onJoinClick(scope.row)">加入</el-button>

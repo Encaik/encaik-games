@@ -4,14 +4,14 @@ export const useUserStore = defineStore('user',{
   state: () => {
     return {
       _id: "",
-      _username: "",
+      _userName: "",
       _password: "",
     };
   },
   actions: {
     updateUser(user:any) {
       this._id = user.id;
-      this._username = user.username;
+      this._userName = user.userName;
       this._password = user.password;
     }
   },
@@ -22,7 +22,7 @@ export const useUserStore = defineStore('user',{
    user:(state)=>{
      return {
        id:state._id,
-       username:state._username,
+       userName:state._userName,
        password:state._password
      }
    }
